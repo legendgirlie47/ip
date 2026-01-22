@@ -7,16 +7,30 @@ public class Ketchup {
         System.out.println(hello);
 
         Scanner sc = new Scanner(System.in);
+        String[] tasks = new String[100];
+        int taskCount = 0;
 
         while (true) {
             String input = sc.nextLine();
             if (input.equalsIgnoreCase("bye")) {
                 System.out.println(goodbye);
                 break;
+            }
+
+            if (input.equalsIgnoreCase("list")) {
+                if (taskCount == 0) {
+                    System.out.println("No tasks in your list.");
+                } else {
+                    for (int i =0; i < taskCount; i++) {
+                        System.out.println((i+1)+". "+ tasks[i]);
+                    }
+
+                }
             } else {
-                System.out.println(input);
+                tasks[taskCount] = input;
+                taskCount++;
+                System.out.println("added: " + input);
             }
         }
-
     }
 }
