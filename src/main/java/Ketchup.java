@@ -7,9 +7,8 @@ public class Ketchup {
         System.out.println(hello);
 
         Scanner sc = new Scanner(System.in);
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
-        boolean[] isDone = new boolean[100];
 
         while (true) {
             String input = sc.nextLine();
@@ -20,16 +19,18 @@ public class Ketchup {
             if (input.startsWith("mark")) {
                 int idx = input.charAt(5) - '0';
                 System.out.println(idx);
-                isDone[idx-1] = true;
-                System.out.println("Marked task: " + "'" + tasks[idx-1] + "'" + " as done! :D");
+                Task temp = tasks[idx-1];
+                temp.markDone();
+                System.out.println("Marked task: " + "'" + temp.getDesc() + "'" + " as done! :D");
                 continue;
             }
 
             if (input.startsWith("unmark")) {
                 int idx = input.charAt(7) - '0';
                 System.out.println(idx);
-                isDone[idx-1] = true;
-                System.out.println("Unmarked task: " + "'" + tasks[idx-1] + "'" + " as done :(");
+                Task temp = tasks[idx-1];
+                temp.markUndone();
+                System.out.println("Unmarked task: " + "'" + temp.getDesc() + "'" + " as done :(");
                 continue;
             }
 
@@ -38,19 +39,40 @@ public class Ketchup {
                     System.out.println("No tasks in your list.");
                 } else {
                     for (int i =0; i < taskCount; i++) {
-                        String done = "[ ]";
-                        if(isDone[i]) {
-                            done = "[X]";
-                        }
-                        System.out.println(done + " " + (i+1)+". "+ tasks[i]);
+                        System.out.println((i+1)+". "+ tasks[i].toString());
                     }
 
                 }
             } else {
-                tasks[taskCount] = input;
-                isDone[taskCount] = false;
-                taskCount++;
-                System.out.println("added: " + input);
+                if (input.startsWith("todo")) {
+                    String todo = input.substring(5).trim();
+                    tasks[taskCount] = new ToDo(todo);
+                    System.out.println("Sure! I have added todo: " + todo);
+                    taskCount++;
+                    System.out.println("You now have " + taskCount + " tasks in your list!");
+                }
+
+                if (input.startsWith("deadline")) {
+                    int byIndex = input.indexOf(" /by ");
+                    String desc = input.substring(8, byIndex).trim();
+                    String by = input.substring(byIndex + 5);
+                    tasks[taskCount] = new Deadline(desc, by);
+                    System.out.println("Sure! I have added deadline: " + desc);
+                    taskCount++;
+                    System.out.println("You now have " + taskCount + " tasks in your list!");
+                }
+
+                if (input.startsWith("event")) {
+                    int fromIndex = input.indexOf(" /from ");
+                    int toIndex = input.indexOf(" /to ");
+                    String desc = input.substring(5, fromIndex).trim();
+                    String from = input.substring(fromIndex + 7, toIndex);
+                    String to = input.substring(toIndex + 5);
+                    tasks[taskCount] = new Event(desc, from, to);
+                    System.out.println("Sure! I have added event: " + desc);
+                    taskCount++;
+                    System.out.println("You now have " + taskCount + " tasks in your list!");
+                }
             }
         }
     }
