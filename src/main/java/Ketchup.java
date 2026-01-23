@@ -108,6 +108,21 @@ public class Ketchup {
                 continue;
             }
 
+            if (input.startsWith("delete")) {
+                int idx = input.charAt(7) - '0';
+                if (idx > taskCount || idx <= 0) {
+                    System.out.println("Task not found!!!");
+                    continue;
+                }
+                Task temp = tasks[idx-1];
+                for (int i = idx-1; i < taskCount - 1; i++) {
+                    tasks[i] = tasks[i + 1];
+                }
+                taskCount--;
+                System.out.println("Okay! I deleted task: " + temp.getDesc() + "\nYou have " + taskCount + " tasks left!");
+                continue;
+            }
+
             System.out.println("Oh nooo... idk what you are saying...");
         }
     }
