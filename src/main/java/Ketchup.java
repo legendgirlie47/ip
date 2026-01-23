@@ -18,7 +18,10 @@ public class Ketchup {
             }
             if (input.startsWith("mark")) {
                 int idx = input.charAt(5) - '0';
-                System.out.println(idx);
+                if (idx > taskCount || idx <= 0) {
+                    System.out.println("Task not found!!!");
+                    continue;
+                }
                 Task temp = tasks[idx-1];
                 temp.markDone();
                 System.out.println("Marked task: " + "'" + temp.getDesc() + "'" + " as done! :D");
@@ -27,7 +30,10 @@ public class Ketchup {
 
             if (input.startsWith("unmark")) {
                 int idx = input.charAt(7) - '0';
-                System.out.println(idx);
+                if (idx > taskCount || idx <= 0) {
+                    System.out.println("Task not found!!!");
+                    continue;
+                }
                 Task temp = tasks[idx-1];
                 temp.markUndone();
                 System.out.println("Unmarked task: " + "'" + temp.getDesc() + "'" + " as done :(");
@@ -43,37 +49,66 @@ public class Ketchup {
                     }
 
                 }
-            } else {
-                if (input.startsWith("todo")) {
-                    String todo = input.substring(5).trim();
-                    tasks[taskCount] = new ToDo(todo);
-                    System.out.println("Sure! I have added todo: " + todo);
-                    taskCount++;
-                    System.out.println("You now have " + taskCount + " tasks in your list!");
-                }
-
-                if (input.startsWith("deadline")) {
-                    int byIndex = input.indexOf(" /by ");
-                    String desc = input.substring(8, byIndex).trim();
-                    String by = input.substring(byIndex + 5);
-                    tasks[taskCount] = new Deadline(desc, by);
-                    System.out.println("Sure! I have added deadline: " + desc);
-                    taskCount++;
-                    System.out.println("You now have " + taskCount + " tasks in your list!");
-                }
-
-                if (input.startsWith("event")) {
-                    int fromIndex = input.indexOf(" /from ");
-                    int toIndex = input.indexOf(" /to ");
-                    String desc = input.substring(5, fromIndex).trim();
-                    String from = input.substring(fromIndex + 7, toIndex);
-                    String to = input.substring(toIndex + 5);
-                    tasks[taskCount] = new Event(desc, from, to);
-                    System.out.println("Sure! I have added event: " + desc);
-                    taskCount++;
-                    System.out.println("You now have " + taskCount + " tasks in your list!");
-                }
+                continue;
             }
+            if (input.startsWith("todo")) {
+                String todo = input.substring(4).trim();
+                if (todo.isEmpty()) {
+                    System.out.println("Toodledoo! What is your todo?");
+                    continue;
+                }
+                tasks[taskCount] = new ToDo(todo);
+                System.out.println("Sure! I have added todo: " + todo);
+                taskCount++;
+                System.out.println("You now have " + taskCount + " tasks in your list!");
+                continue;
+            }
+
+            if (input.startsWith("deadline")) {
+                int byIndex = input.indexOf(" /by ");
+                if (byIndex == -1) {
+                    System.out.println("No deadline given :0");
+                    continue;
+                }
+                String desc = input.substring(7, byIndex).trim();
+                if (desc.isEmpty()) {
+                    System.out.println("Tick tock on the clock! What is it you must do?");
+                    continue;
+                }
+                String by = input.substring(byIndex + 5);
+                tasks[taskCount] = new Deadline(desc, by);
+                System.out.println("Sure! I have added deadline: " + desc);
+                taskCount++;
+                System.out.println("You now have " + taskCount + " tasks in your list!");
+                continue;
+            }
+
+            if (input.startsWith("event")) {
+                int fromIndex = input.indexOf(" /from ");
+                int toIndex = input.indexOf(" /to ");
+                if (fromIndex == -1 ) {
+                    System.out.println("What is the start time!!!");
+                    continue;
+                }
+                if (toIndex == -1 ) {
+                    System.out.println("What is the end time!!!");
+                    continue;
+                }
+                String desc = input.substring(5, fromIndex).trim();
+                if (desc.isEmpty()) {
+                    System.out.println("Hey!! What is it you must do?");
+                    continue;
+                }
+                String from = input.substring(fromIndex + 7, toIndex);
+                String to = input.substring(toIndex + 5);
+                tasks[taskCount] = new Event(desc, from, to);
+                System.out.println("Sure! I have added event: " + desc);
+                taskCount++;
+                System.out.println("You now have " + taskCount + " tasks in your list!");
+                continue;
+            }
+
+            System.out.println("Oh nooo... idk what you are saying...");
         }
     }
 }
