@@ -7,11 +7,11 @@ public class Ketchup {
         System.out.println(hello);
 
         Scanner sc = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        TaskList tasks = new TaskList();
 
         while (true) {
             String input = sc.nextLine();
+            int taskCount = tasks.getSize();
             if (input.equalsIgnoreCase("bye")) {
                 System.out.println(goodbye);
                 break;
@@ -22,7 +22,7 @@ public class Ketchup {
                     System.out.println("Task not found!!!");
                     continue;
                 }
-                Task temp = tasks[idx-1];
+                Task temp = tasks.getTask(idx - 1);
                 temp.markDone();
                 System.out.println("Marked task: " + "'" + temp.getDesc() + "'" + " as done! :D");
                 continue;
@@ -34,20 +34,17 @@ public class Ketchup {
                     System.out.println("Task not found!!!");
                     continue;
                 }
-                Task temp = tasks[idx-1];
+                Task temp = tasks.getTask(idx - 1);
                 temp.markUndone();
                 System.out.println("Unmarked task: " + "'" + temp.getDesc() + "'" + " as done :(");
                 continue;
             }
 
             if (input.equalsIgnoreCase("list")) {
-                if (taskCount == 0) {
+                if (tasks.getSize() == 0) {
                     System.out.println("No tasks in your list.");
                 } else {
-                    for (int i =0; i < taskCount; i++) {
-                        System.out.println((i+1)+". "+ tasks[i].toString());
-                    }
-
+                    System.out.println(tasks.toString());
                 }
                 continue;
             }
@@ -57,7 +54,7 @@ public class Ketchup {
                     System.out.println("Toodledoo! What is your todo?");
                     continue;
                 }
-                tasks[taskCount] = new ToDo(todo);
+                tasks.addTask(new ToDo(todo));
                 System.out.println("Sure! I have added todo: " + todo);
                 taskCount++;
                 System.out.println("You now have " + taskCount + " tasks in your list!");
@@ -76,7 +73,7 @@ public class Ketchup {
                     continue;
                 }
                 String by = input.substring(byIndex + 5);
-                tasks[taskCount] = new Deadline(desc, by);
+                tasks.addTask(new Deadline(desc, by));
                 System.out.println("Sure! I have added deadline: " + desc);
                 taskCount++;
                 System.out.println("You now have " + taskCount + " tasks in your list!");
@@ -101,7 +98,7 @@ public class Ketchup {
                 }
                 String from = input.substring(fromIndex + 7, toIndex);
                 String to = input.substring(toIndex + 5);
-                tasks[taskCount] = new Event(desc, from, to);
+                tasks.addTask(new Event(desc, from, to));
                 System.out.println("Sure! I have added event: " + desc);
                 taskCount++;
                 System.out.println("You now have " + taskCount + " tasks in your list!");
@@ -114,15 +111,12 @@ public class Ketchup {
                     System.out.println("Task not found!!!");
                     continue;
                 }
-                Task temp = tasks[idx-1];
-                for (int i = idx-1; i < taskCount - 1; i++) {
-                    tasks[i] = tasks[i + 1];
-                }
-                taskCount--;
+                Task temp = tasks.getTask(idx - 1);
+                tasks.deleteTask(idx - 1);
+                taskCount -= 1;
                 System.out.println("Okay! I deleted task: " + temp.getDesc() + "\nYou have " + taskCount + " tasks left!");
                 continue;
             }
-
             System.out.println("Oh nooo... idk what you are saying...");
         }
     }
