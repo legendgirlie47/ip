@@ -1,3 +1,5 @@
+package ketchup.tasks;
+
 import java.time.LocalDateTime;
 
 public class Event extends Task {

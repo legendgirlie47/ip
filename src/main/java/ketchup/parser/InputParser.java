@@ -1,3 +1,9 @@
+package ketchup.parser;
+
+import ketchup.storage.Storage;
+import ketchup.tasks.*;
+import ketchup.ui.Ui;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -33,7 +39,7 @@ public class InputParser {
         if (input.startsWith("mark")) {
             int idx = parseSingleDigitIndex(input, 5);
             if (!isValidIndex(idx, taskCount)) {
-                ui.showError("Task not found!!!");
+                ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
             Task t = tasks.getTask(idx - 1);
@@ -46,7 +52,7 @@ public class InputParser {
         if (input.startsWith("unmark")) {
             int idx = parseSingleDigitIndex(input, 7);
             if (!isValidIndex(idx, taskCount)) {
-                ui.showError("Task not found!!!");
+                ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
             Task t = tasks.getTask(idx - 1);
@@ -59,7 +65,7 @@ public class InputParser {
         if (input.startsWith("delete")) {
             int idx = parseSingleDigitIndex(input, 7);
             if (!isValidIndex(idx, taskCount)) {
-                ui.showError("Task not found!!!");
+                ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
             Task t = tasks.getTask(idx - 1);

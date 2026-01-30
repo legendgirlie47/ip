@@ -1,7 +1,11 @@
+package ketchup.ui;
+
+import ketchup.tasks.TaskList;
+
 public class Ui {
 
     public void showHello() {
-        System.out.println("Hello! I'm Ketchup\nWhat can I do for you?\n");
+        System.out.println("Hello! I'm ketchup.\nWhat can I do for you?\n");
     }
 
     public void showGoodbye() {

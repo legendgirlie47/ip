@@ -1,3 +1,9 @@
+package ketchup.storage;
+
+import ketchup.parser.TaskParser;
+import ketchup.tasks.Task;
+import ketchup.tasks.TaskList;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

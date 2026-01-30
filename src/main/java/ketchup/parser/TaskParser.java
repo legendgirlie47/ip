@@ -1,3 +1,9 @@
+package ketchup.parser;
+
+import ketchup.tasks.Deadline;
+import ketchup.tasks.Event;
+import ketchup.tasks.Task;
+import ketchup.tasks.ToDo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
