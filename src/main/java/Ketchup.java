@@ -4,140 +4,32 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Ketchup {
+    private final Ui ui;
+    private final InputParser parser;
+    private final TaskList tasks;
 
-    public static void main(String[] args) {
-        String hello = "Hello! I'm Ketchup\nWhat can I do for you?\n";
-        String goodbye = "Bye. Hope to see you again soon!";
-        System.out.println(hello);
+    public Ketchup() {
+        this.ui = new Ui();
+        this.parser = new InputParser(ui);
+        this.tasks = Storage.load();
+    }
+
+    public void run() {
+        ui.showHello();
 
         Scanner sc = new Scanner(System.in);
-        TaskList tasks =Storage.load();
-
         while (true) {
             String input = sc.nextLine();
-            int taskCount = tasks.getSize();
-            if (input.equalsIgnoreCase("bye")) {
-                System.out.println(goodbye);
+            boolean shouldExit = parser.handle(input, tasks);
+            if (shouldExit) {
+                ui.showGoodbye();
                 break;
             }
-            if (input.startsWith("mark")) {
-                int idx = input.charAt(5) - '0';
-                if (idx > taskCount || idx <= 0) {
-                    System.out.println("Task not found!!!");
-                    continue;
-                }
-                Task temp = tasks.getTask(idx - 1);
-                temp.markDone();
-                System.out.println("Marked task: " + "'" + temp.getDesc() + "'" + " as done! :D");
-                Storage.save(tasks);
-                continue;
-            }
-
-            if (input.startsWith("unmark")) {
-                int idx = input.charAt(7) - '0';
-                if (idx > taskCount || idx <= 0) {
-                    System.out.println("Task not found!!!");
-                    continue;
-                }
-                Task temp = tasks.getTask(idx - 1);
-                temp.markUndone();
-                System.out.println("Unmarked task: " + "'" + temp.getDesc() + "'" + " as done :(");
-                Storage.save(tasks);
-                continue;
-            }
-
-            if (input.equalsIgnoreCase("list")) {
-                if (tasks.getSize() == 0) {
-                    System.out.println("No tasks in your list.");
-                } else {
-                    System.out.println(tasks.toString());
-                }
-                continue;
-            }
-            if (input.startsWith("todo")) {
-                String todo = input.substring(4).trim();
-                if (todo.isEmpty()) {
-                    System.out.println("Toodledoo! What is your todo?");
-                    continue;
-                }
-                tasks.addTask(new ToDo(todo));
-                System.out.println("Sure! I have added todo: " + todo);
-                taskCount++;
-                System.out.println("You now have " + taskCount + " tasks in your list!");
-                Storage.save(tasks);
-                continue;
-            }
-
-            if (input.startsWith("deadline")) {
-                int byIndex = input.indexOf(" /by ");
-                if (byIndex == -1) {
-                    System.out.println("No deadline given :0");
-                    continue;
-                }
-                String desc = input.substring(8, byIndex).trim();
-                if (desc.isEmpty()) {
-                    System.out.println("Tick tock on the clock! What is it you must do?");
-                    continue;
-                }
-                String by = input.substring(byIndex + 5);
-                try {
-                    LocalDateTime byDate = LocalDateTime.parse(by, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    tasks.addTask(new Deadline(desc, byDate));
-                    taskCount++;
-                    System.out.println("Sure! I have added deadline: " + desc);
-                    System.out.println("You now have " + taskCount + " tasks in your list!");
-                    Storage.save(tasks);
-                } catch (DateTimeParseException e) {
-                    System.out.println("Please enter date in 'yyyy-MM-dd HHmm' format.");
-                }
-                continue;
-            }
-
-            if (input.startsWith("event")) {
-                int fromIndex = input.indexOf(" /from ");
-                int toIndex = input.indexOf(" /to ");
-                if (fromIndex == -1 ) {
-                    System.out.println("What is the start time!!!");
-                    continue;
-                }
-                if (toIndex == -1 ) {
-                    System.out.println("What is the end time!!!");
-                    continue;
-                }
-                String desc = input.substring(5, fromIndex).trim();
-                if (desc.isEmpty()) {
-                    System.out.println("Hey!! What is it you must do?");
-                    continue;
-                }
-                String from = input.substring(fromIndex + 7, toIndex);
-                String to = input.substring(toIndex + 5);
-                try {
-                    LocalDateTime fromDate = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    LocalDateTime toDate = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    tasks.addTask(new Event(desc, fromDate, toDate));
-                    taskCount++;
-                    System.out.println("Sure! I have added deadline: " + desc);
-                    System.out.println("You now have " + taskCount + " tasks in your list!");
-                    Storage.save(tasks);
-                } catch (DateTimeParseException e) {
-                    System.out.println("Please enter date in 'yyyy-MM-dd HHmm' format.");
-                }
-                continue;
-            }
-
-            if (input.startsWith("delete")) {
-                int idx = input.charAt(7) - '0';
-                if (idx > taskCount || idx <= 0) {
-                    System.out.println("Task not found!!!");
-                    continue;
-                }
-                Task temp = tasks.getTask(idx - 1);
-                tasks.deleteTask(idx - 1);
-                taskCount -= 1;
-                System.out.println("Okay! I deleted task: " + temp.getDesc() + "\nYou have " + taskCount + " tasks left!");
-                continue;
-            }
-            System.out.println("Oh nooo... idk what you are saying...");
         }
     }
+
+    public static void main(String[] args) {
+        new Ketchup().run();
+    }
+
 }
