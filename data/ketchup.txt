@@ -1,3 +1,2 @@
-T | 0 | buy bread
-T | 0 | eat dinner
-T | 0 | shower
+D | 0 | write essay | 2026-09-09 2359
+E | 0 | radio show | 2026-01-30 1600 | 2026-01-30 1800

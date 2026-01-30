@@ -1,4 +1,9 @@
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+
 public class TaskParser {
+
     public Task parse(String line) throws Exception {
         if (line == null) {
             throw new Exception("Null line");
@@ -38,7 +43,12 @@ public class TaskParser {
                     throw new Exception("Corrupted deadline: missing /by");
                 }
                 String by = parts[3].trim();
-                task = new Deadline(desc, by);
+                try {
+                    LocalDateTime byTime = LocalDateTime.parse(by, Task.getDateFormat());
+                    task = new Deadline(desc, byTime);
+                } catch (DateTimeParseException e) {
+                    throw new Exception("Corrupted line: invalid DateTime format.");
+                }
                 break;
 
             case "E":
@@ -47,7 +57,13 @@ public class TaskParser {
                 }
                 String from = parts[3].trim();
                 String to = parts[4].trim();
-                task = new Event(desc, from, to);
+                try {
+                    LocalDateTime fromTime = LocalDateTime.parse(from, Task.getDateFormat());
+                    LocalDateTime toTime = LocalDateTime.parse(to, Task.getDateFormat());
+                    task = new Event(desc, fromTime, toTime);
+                } catch (DateTimeParseException e) {
+                    throw new Exception("Corrupted line: invalid DateTime format.");
+                }
                 break;
 
             default:

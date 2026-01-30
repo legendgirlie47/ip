@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Ketchup {
@@ -72,17 +74,22 @@ public class Ketchup {
                     System.out.println("No deadline given :0");
                     continue;
                 }
-                String desc = input.substring(7, byIndex).trim();
+                String desc = input.substring(8, byIndex).trim();
                 if (desc.isEmpty()) {
                     System.out.println("Tick tock on the clock! What is it you must do?");
                     continue;
                 }
                 String by = input.substring(byIndex + 5);
-                tasks.addTask(new Deadline(desc, by));
-                System.out.println("Sure! I have added deadline: " + desc);
-                taskCount++;
-                System.out.println("You now have " + taskCount + " tasks in your list!");
-                Storage.save(tasks);
+                try {
+                    LocalDateTime byDate = LocalDateTime.parse(by, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    tasks.addTask(new Deadline(desc, byDate));
+                    taskCount++;
+                    System.out.println("Sure! I have added deadline: " + desc);
+                    System.out.println("You now have " + taskCount + " tasks in your list!");
+                    Storage.save(tasks);
+                } catch (DateTimeParseException e) {
+                    System.out.println("Please enter date in 'yyyy-MM-dd HHmm' format.");
+                }
                 continue;
             }
 
@@ -104,11 +111,17 @@ public class Ketchup {
                 }
                 String from = input.substring(fromIndex + 7, toIndex);
                 String to = input.substring(toIndex + 5);
-                tasks.addTask(new Event(desc, from, to));
-                System.out.println("Sure! I have added event: " + desc);
-                taskCount++;
-                System.out.println("You now have " + taskCount + " tasks in your list!");
-                Storage.save(tasks);
+                try {
+                    LocalDateTime fromDate = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    LocalDateTime toDate = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    tasks.addTask(new Event(desc, fromDate, toDate));
+                    taskCount++;
+                    System.out.println("Sure! I have added deadline: " + desc);
+                    System.out.println("You now have " + taskCount + " tasks in your list!");
+                    Storage.save(tasks);
+                } catch (DateTimeParseException e) {
+                    System.out.println("Please enter date in 'yyyy-MM-dd HHmm' format.");
+                }
                 continue;
             }
 

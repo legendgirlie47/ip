@@ -1,13 +1,21 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Storage {
     private static final String FILE_PATH = "data/ketchup.txt";
 
-    public Storage() {};
+    public static void clear() {
+        try {
+            FileWriter fw = new FileWriter("data/ketchup.txt");
+            fw.write("");
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Could not clear data file.");
+        }
+    }
+
     public static void save(TaskList tasks) {
         try {
             File dir = new File("data");
@@ -41,6 +49,7 @@ public class Storage {
             }
             sc.close();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("Could not load tasks.");
         }
         return list;
