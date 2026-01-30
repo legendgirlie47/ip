@@ -7,6 +7,12 @@ public class Deadline extends Task {
     }
 
     @Override
+    public String toFileString() {
+        return ("D | " + (this.isDone()? "1": "0") + " | " + this.getDesc() + " | "
+                + this.deadline);
+    }
+
+    @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + this.deadline + ")";
     }

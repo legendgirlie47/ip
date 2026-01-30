@@ -1,13 +1,15 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ketchup {
+
     public static void main(String[] args) {
         String hello = "Hello! I'm Ketchup\nWhat can I do for you?\n";
         String goodbye = "Bye. Hope to see you again soon!";
         System.out.println(hello);
 
         Scanner sc = new Scanner(System.in);
-        TaskList tasks = new TaskList();
+        TaskList tasks =Storage.load();
 
         while (true) {
             String input = sc.nextLine();
@@ -25,6 +27,7 @@ public class Ketchup {
                 Task temp = tasks.getTask(idx - 1);
                 temp.markDone();
                 System.out.println("Marked task: " + "'" + temp.getDesc() + "'" + " as done! :D");
+                Storage.save(tasks);
                 continue;
             }
 
@@ -37,6 +40,7 @@ public class Ketchup {
                 Task temp = tasks.getTask(idx - 1);
                 temp.markUndone();
                 System.out.println("Unmarked task: " + "'" + temp.getDesc() + "'" + " as done :(");
+                Storage.save(tasks);
                 continue;
             }
 
@@ -58,6 +62,7 @@ public class Ketchup {
                 System.out.println("Sure! I have added todo: " + todo);
                 taskCount++;
                 System.out.println("You now have " + taskCount + " tasks in your list!");
+                Storage.save(tasks);
                 continue;
             }
 
@@ -77,6 +82,7 @@ public class Ketchup {
                 System.out.println("Sure! I have added deadline: " + desc);
                 taskCount++;
                 System.out.println("You now have " + taskCount + " tasks in your list!");
+                Storage.save(tasks);
                 continue;
             }
 
@@ -102,6 +108,7 @@ public class Ketchup {
                 System.out.println("Sure! I have added event: " + desc);
                 taskCount++;
                 System.out.println("You now have " + taskCount + " tasks in your list!");
+                Storage.save(tasks);
                 continue;
             }
 

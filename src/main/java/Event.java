@@ -9,6 +9,12 @@ public class Event extends Task {
     }
 
     @Override
+    public String toFileString() {
+        return ("E | " + (this.isDone()? "1": "0") + " | " + this.getDesc() + " | "
+                + this.start + " | " + this.end);
+    }
+
+    @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + this.start + " to: " + this.end + ")";
     }

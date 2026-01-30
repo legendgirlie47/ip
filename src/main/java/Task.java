@@ -6,6 +6,10 @@ public class Task {
         this.desc = desc;
     }
 
+    public boolean isDone() {
+        return this.isDone;
+    }
+
     public void markDone() {
         this.isDone = true;
     }
@@ -17,6 +21,10 @@ public class Task {
     public String getDesc() {
         return this.desc;
     }
+
+    public String toFileString() {
+        return ("T | " + (this.isDone? "1": "0") + " | " + this.desc);
+    };
 
     @Override
     public String toString() {
