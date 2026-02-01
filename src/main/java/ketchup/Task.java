@@ -1,4 +1,4 @@
-package ketchup.tasks;
+package ketchup;
 
 import java.time.format.DateTimeFormatter;
 

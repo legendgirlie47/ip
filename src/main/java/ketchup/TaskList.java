@@ -1,4 +1,4 @@
-package ketchup.tasks;
+package ketchup;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,7 @@
 package ketchup.parser;
 
+import ketchup.*;
 import ketchup.storage.Storage;
-import ketchup.tasks.*;
 import ketchup.ui.Ui;
 
 import java.time.LocalDateTime;

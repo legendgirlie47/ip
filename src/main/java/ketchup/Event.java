@@ -1,4 +1,4 @@
-package ketchup.tasks;
+package ketchup;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +10,14 @@ public class Event extends Task {
         super(desc);
         this.start = start;
         this.end = end;
+    }
+
+    public LocalDateTime getStart() {
+        return this.start;
+    }
+
+    public LocalDateTime getEnd() {
+        return this.end;
     }
 
     @Override

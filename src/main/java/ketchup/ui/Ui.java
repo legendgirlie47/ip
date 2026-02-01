@@ -1,6 +1,6 @@
 package ketchup.ui;
 
-import ketchup.tasks.TaskList;
+import ketchup.TaskList;
 
 public class Ui {
 

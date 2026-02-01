@@ -1,8 +1,8 @@
 package ketchup.storage;
 
 import ketchup.parser.TaskParser;
-import ketchup.tasks.Task;
-import ketchup.tasks.TaskList;
+import ketchup.Task;
+import ketchup.TaskList;
 
 import java.io.File;
 import java.io.FileWriter;

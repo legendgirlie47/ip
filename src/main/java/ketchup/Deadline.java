@@ -1,4 +1,4 @@
-package ketchup.tasks;
+package ketchup;
 
 import java.time.LocalDateTime;
 
@@ -8,6 +8,10 @@ public class Deadline extends Task {
     public Deadline(String desc, LocalDateTime deadline) {
         super(desc);
         this.deadline = deadline;
+    }
+
+    public LocalDateTime getDeadline() {
+        return this.deadline;
     }
 
     @Override
