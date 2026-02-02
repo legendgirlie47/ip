@@ -2,6 +2,7 @@ package ketchup;
 
 import ketchup.parser.InputParser;
 import ketchup.storage.Storage;
+import ketchup.tasks.TaskList;
 import ketchup.ui.Ui;
 
 import java.util.Scanner;
