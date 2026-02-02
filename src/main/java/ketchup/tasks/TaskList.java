@@ -2,7 +2,10 @@ package ketchup.tasks;
 
 import java.util.ArrayList;
 
+import ketchup.ui.Ui;
+
 public class TaskList {
+    private Ui ui = new Ui();
     private ArrayList<Task> taskList;
 
     public TaskList() {
@@ -23,6 +26,19 @@ public class TaskList {
 
     public void deleteTask(int i) {
         this.taskList.remove(i);
+    }
+
+    public TaskList findTask(String keyword) {
+        TaskList results = new TaskList();
+
+        for (int i = 0; i < this.getSize(); i++) {
+            Task task = this.getTask(i);
+            if (task.getDesc().toLowerCase().contains(keyword.toLowerCase())) {
+                results.addTask(task);
+            }
+        }
+
+        return results;
     }
 
     @Override

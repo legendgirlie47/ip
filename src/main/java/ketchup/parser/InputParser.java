@@ -38,7 +38,7 @@ public class InputParser {
 
         if (input.startsWith("mark")) {
             int idx = parseSingleDigitIndex(input, 5);
-            if (!isValidIndex(idx, taskCount)) {
+            if (isInvalidIndex(idx, taskCount)) {
                 ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
@@ -51,7 +51,7 @@ public class InputParser {
 
         if (input.startsWith("unmark")) {
             int idx = parseSingleDigitIndex(input, 7);
-            if (!isValidIndex(idx, taskCount)) {
+            if (isInvalidIndex(idx, taskCount)) {
                 ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
@@ -64,7 +64,7 @@ public class InputParser {
 
         if (input.startsWith("delete")) {
             int idx = parseSingleDigitIndex(input, 7);
-            if (!isValidIndex(idx, taskCount)) {
+            if (!isInvalidIndex(idx, taskCount)) {
                 ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
@@ -144,12 +144,25 @@ public class InputParser {
             return false;
         }
 
+        if (input.startsWith("find")) {
+            String keyword = input.substring(5).trim();
+            TaskList result = tasks.findTask(keyword);
+
+            if (result.getSize()==0) {
+                ui.showError("Oops! No matching task found...");
+                return false;
+            }
+
+            System.out.println(result);
+            return false;
+        }
+
         ui.showError("Oh nooo... idk what you are saying...");
         return false;
     }
 
-    private boolean isValidIndex(int idx, int taskCount) {
-        return idx > 0 && idx <= taskCount;
+    private boolean isInvalidIndex(int idx, int taskCount) {
+        return idx < 0 || idx <= taskCount;
     }
 
     private int parseSingleDigitIndex(String input, int charPos) {
