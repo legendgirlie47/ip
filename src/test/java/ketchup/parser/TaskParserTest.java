@@ -1,8 +1,8 @@
 package ketchup.parser;
 
-import ketchup.Deadline;
-import ketchup.Task;
-import ketchup.ToDo;
+import ketchup.tasks.Deadline;
+import ketchup.tasks.Task;
+import ketchup.tasks.ToDo;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

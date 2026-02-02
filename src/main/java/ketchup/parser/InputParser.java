@@ -1,6 +1,10 @@
 package ketchup.parser;
 
-import ketchup.*;
+import ketchup.tasks.Deadline;
+import ketchup.tasks.Event;
+import ketchup.tasks.Task;
+import ketchup.tasks.TaskList;
+import ketchup.tasks.ToDo;
 import ketchup.storage.Storage;
 import ketchup.ui.Ui;
 

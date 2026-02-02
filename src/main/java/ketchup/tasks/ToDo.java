@@ -1,4 +1,4 @@
-package ketchup;
+package ketchup.tasks;
 
 public class ToDo extends Task {
 
