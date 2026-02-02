@@ -9,36 +9,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class InputParser {
-
-    /**
-     * Formatter used to parse date-time inputs in the format yyyy-MM-dd HHmm.
-     * <p>
-     * Example: 2019-12-02 1800
-     */
-    private static final DateTimeFormatter DT_FMT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     private final Ui ui;
 
-    /**
-     * Constructs an InputParser with the given UI handler.
-     *
-     * @param ui the UI instance used to display messages to the user
-     */
     public InputParser(Ui ui) {
         this.ui = ui;
     }
 
-    /**
-     * Handles a single line of user input.
-     * <p>
-     * This method parses the input command, performs the corresponding action
-     * on the given task list, and saves the task list if it is modified.
-     *
-     * @param input the raw user input string
-     * @param tasks the task list to operate on
-     * @return {@code true} if the program should exit, {@code false} otherwise
-     */
     public boolean handle(String input, TaskList tasks) {
         if (input == null) {
             ui.showError("Oh nooo... idk what you are saying...");
@@ -60,8 +38,8 @@ public class InputParser {
 
         if (input.startsWith("mark")) {
             int idx = parseSingleDigitIndex(input, 5);
-            if (!isValidIndex(idx, taskCount)) {
-                ui.showError("Task not found!!!");
+            if (isInvalidIndex(idx, taskCount)) {
+                ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
             Task t = tasks.getTask(idx - 1);
@@ -73,8 +51,8 @@ public class InputParser {
 
         if (input.startsWith("unmark")) {
             int idx = parseSingleDigitIndex(input, 7);
-            if (!isValidIndex(idx, taskCount)) {
-                ui.showError("Task not found!!!");
+            if (isInvalidIndex(idx, taskCount)) {
+                ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
             Task t = tasks.getTask(idx - 1);
@@ -86,8 +64,8 @@ public class InputParser {
 
         if (input.startsWith("delete")) {
             int idx = parseSingleDigitIndex(input, 7);
-            if (!isValidIndex(idx, taskCount)) {
-                ui.showError("Task not found!!!");
+            if (!isInvalidIndex(idx, taskCount)) {
+                ui.showError("ketchup.tasks.Task not found!!!");
                 return false;
             }
             Task t = tasks.getTask(idx - 1);
@@ -166,30 +144,27 @@ public class InputParser {
             return false;
         }
 
+        if (input.startsWith("find")) {
+            String keyword = input.substring(5).trim();
+            TaskList result = tasks.findTask(keyword);
+
+            if (result.getSize()==0) {
+                ui.showError("Oops! No matching task found...");
+                return false;
+            }
+
+            System.out.println(result);
+            return false;
+        }
+
         ui.showError("Oh nooo... idk what you are saying...");
         return false;
     }
 
-    /**
-     * Checks whether a given task index is valid.
-     *
-     * @param idx the user-provided task index (1-based)
-     * @param taskCount the total number of tasks
-     * @return {@code true} if the index refers to an existing task
-     */
-    private boolean isValidIndex(int idx, int taskCount) {
-        return idx > 0 && idx <= taskCount;
+    private boolean isInvalidIndex(int idx, int taskCount) {
+        return idx < 0 || idx <= taskCount;
     }
 
-    /**
-     * Parses a single-digit task index from the input string.
-     * <p>
-     * This method assumes the index appears at a fixed character position.
-     *
-     * @param input the full user input
-     * @param charPos the character position of the index
-     * @return the parsed index, or -1 if invalid
-     */
     private int parseSingleDigitIndex(String input, int charPos) {
         if (input.length() <= charPos) return -1;
         char c = input.charAt(charPos);
