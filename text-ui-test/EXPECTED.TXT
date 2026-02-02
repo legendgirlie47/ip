@@ -1,4 +1,4 @@
-Hello! I'm ketchup.Ketchup
+Hello! I'm ketchup.tasks.Deadline.Ketchup
 What can I do for you?
 
 Sure! I have added todo: eat lunch
