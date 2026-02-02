@@ -10,6 +10,14 @@ import java.time.format.DateTimeParseException;
 
 public class TaskParser {
 
+    /**
+     * Parses a single line from the data file into a Task object.
+     *
+     * @param line a line of text from the save file
+     * @return the parsed Task object
+     * @throws Exception if the line is null, empty, corrupted, or contains
+     *                   invalid task data
+     */
     public Task parse(String line) throws Exception {
         if (line == null) {
             throw new Exception("Null line");
@@ -20,10 +28,10 @@ public class TaskParser {
             throw new Exception("Empty line");
         }
 
-        // split by " | " (with optional surrounding spaces)
+        // Split by " | " with optional surrounding spaces
         String[] parts = trimmed.split("\\s*\\|\\s*");
 
-        // Minimum: TYPE | DONE | DESC
+        // Minimum format: TYPE | DONE | DESCRIPTION
         if (parts.length < 3) {
             throw new Exception("Corrupted line: not enough parts");
         }
@@ -50,7 +58,8 @@ public class TaskParser {
                 }
                 String by = parts[3].trim();
                 try {
-                    LocalDateTime byTime = LocalDateTime.parse(by, Task.getDateFormat());
+                    LocalDateTime byTime =
+                            LocalDateTime.parse(by, Task.getDateFormat());
                     task = new Deadline(desc, byTime);
                 } catch (DateTimeParseException e) {
                     throw new Exception("Corrupted line: invalid DateTime format.");
@@ -64,8 +73,10 @@ public class TaskParser {
                 String from = parts[3].trim();
                 String to = parts[4].trim();
                 try {
-                    LocalDateTime fromTime = LocalDateTime.parse(from, Task.getDateFormat());
-                    LocalDateTime toTime = LocalDateTime.parse(to, Task.getDateFormat());
+                    LocalDateTime fromTime =
+                            LocalDateTime.parse(from, Task.getDateFormat());
+                    LocalDateTime toTime =
+                            LocalDateTime.parse(to, Task.getDateFormat());
                     task = new Event(desc, fromTime, toTime);
                 } catch (DateTimeParseException e) {
                     throw new Exception("Corrupted line: invalid DateTime format.");
