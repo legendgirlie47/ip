@@ -1,4 +1,4 @@
-package ketchup;
+package ketchup.tasks;
 
 import java.time.format.DateTimeFormatter;
 
@@ -31,6 +31,17 @@ public class Task {
         return this.desc;
     }
 
+    /**
+     * Returns a string representation of this task suitable for file storage.
+     * <p>
+     * Format:
+     * T | isDone | description
+     * <p>
+     * Example:
+     * T | 0 | buy bread
+     *
+     * @return a formatted string that can be written to the save file
+     */
     public String toFileString() {
         return ("T | " + (this.isDone? "1": "0") + " | " + this.desc);
     }

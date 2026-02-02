@@ -1,4 +1,2 @@
-D | 0 | write essay | 2026-09-09 2359
+D | 1 | write essay | 2026-09-09 2359
 T | 0 | buy bread
-T | 0 | eat bread
-D | 0 | make bread | 2026-02-04 1800
