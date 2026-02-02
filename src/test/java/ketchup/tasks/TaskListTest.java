@@ -1,7 +1,5 @@
 package ketchup.tasks;
 
-import ketchup.TaskList;
-import ketchup.ToDo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
