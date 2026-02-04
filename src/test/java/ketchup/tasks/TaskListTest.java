@@ -5,8 +5,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * Unit tests for {@link TaskList}.
+ * Verifies basic task list operations such as add, get, and delete.
+ */
 public class TaskListTest {
 
+    /**
+     * Tests that tasks added to the list are stored in order
+     * and can be retrieved correctly by index.
+     */
     @Test
     public void addAndGetTask_tasksStoredInOrder() {
         TaskList list = new TaskList();
@@ -19,6 +27,9 @@ public class TaskListTest {
         assertEquals("write report", list.getTask(1).getDesc());
     }
 
+    /**
+     * Tests that deleting a task removes it and shifts subsequent tasks left.
+     */
     @Test
     public void deleteTask_removedAndShiftsLeft() {
         TaskList list = new TaskList();
@@ -33,6 +44,9 @@ public class TaskListTest {
         assertEquals("C", list.getTask(1).getDesc()); // shifted left
     }
 
+    /**
+     * Tests that deleting a task at an invalid index throws an exception.
+     */
     @Test
     public void deleteTask_indexOutOfBounds_exceptionThrown() {
         TaskList list = new TaskList();
