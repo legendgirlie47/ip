@@ -1,82 +1,104 @@
 package ketchup.parser;
 
-import ketchup.storage.Storage;
-import ketchup.tasks.*;
-import ketchup.ui.Ui;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import ketchup.storage.Storage;
+import ketchup.tasks.Deadline;
+import ketchup.tasks.Event;
+import ketchup.tasks.Task;
+import ketchup.tasks.TaskList;
+import ketchup.tasks.ToDo;
+import ketchup.ui.Ui;
+
+/**
+ * Parses user input commands and applies them to the task list.
+ */
 public class InputParser {
-    private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+
+    /** Date-time format used for parsing user-entered date-time strings. */
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     private final Ui ui;
 
+    /**
+     * Creates an input parser with the given UI.
+     *
+     * @param ui UI used to display messages to the user
+     */
     public InputParser(Ui ui) {
         this.ui = ui;
     }
 
+    /**
+     * Handles a user command.
+     *
+     * @param input User input string
+     * @param tasks Task list to operate on
+     * @return true if the program should exit, false otherwise
+     */
     public boolean handle(String input, TaskList tasks) {
         if (input == null) {
             ui.showError("Oh nooo... idk what you are saying...");
             return false;
         }
 
-        input = input.trim();
+        String trimmedInput = input.trim();
 
-        if (input.equalsIgnoreCase("bye")) {
+        if (trimmedInput.equalsIgnoreCase("bye")) {
             return true;
         }
 
-        int taskCount = tasks.getSize();
-
-        if (input.equalsIgnoreCase("list")) {
+        if (trimmedInput.equalsIgnoreCase("list")) {
             ui.showList(tasks);
             return false;
         }
 
-        if (input.startsWith("mark")) {
-            int idx = parseSingleDigitIndex(input, 5);
+        int taskCount = tasks.getSize();
+
+        if (trimmedInput.startsWith("mark")) {
+            int idx = parseSingleDigitIndex(trimmedInput, 5);
             if (isInvalidIndex(idx, taskCount)) {
-                ui.showError("ketchup.tasks.Task not found!!!");
+                ui.showError("Task not found!!!");
                 return false;
             }
-            Task t = tasks.getTask(idx - 1);
-            t.markDone();
-            ui.showMarked(t.getDesc());
+            Task task = tasks.getTask(idx - 1);
+            task.markDone();
+            ui.showMarked(task.getDesc());
             Storage.save(tasks);
             return false;
         }
 
-        if (input.startsWith("unmark")) {
-            int idx = parseSingleDigitIndex(input, 7);
+        if (trimmedInput.startsWith("unmark")) {
+            int idx = parseSingleDigitIndex(trimmedInput, 7);
             if (isInvalidIndex(idx, taskCount)) {
-                ui.showError("ketchup.tasks.Task not found!!!");
+                ui.showError("Task not found!!!");
                 return false;
             }
-            Task t = tasks.getTask(idx - 1);
-            t.markUndone();
-            ui.showUnmarked(t.getDesc());
+            Task task = tasks.getTask(idx - 1);
+            task.markUndone();
+            ui.showUnmarked(task.getDesc());
             Storage.save(tasks);
             return false;
         }
 
-        if (input.startsWith("delete")) {
-            int idx = parseSingleDigitIndex(input, 7);
-            if (!isInvalidIndex(idx, taskCount)) {
-                ui.showError("ketchup.tasks.Task not found!!!");
+        if (trimmedInput.startsWith("delete")) {
+            int idx = parseSingleDigitIndex(trimmedInput, 7);
+            if (isInvalidIndex(idx, taskCount)) {
+                ui.showError("Task not found!!!");
                 return false;
             }
-            Task t = tasks.getTask(idx - 1);
+            Task task = tasks.getTask(idx - 1);
             tasks.deleteTask(idx - 1);
-            ui.showDeleted(t.getDesc(), tasks.getSize());
+            ui.showDeleted(task.getDesc(), tasks.getSize());
             Storage.save(tasks);
             return false;
         }
 
-        if (input.startsWith("todo")) {
-            String todo = input.substring(4).trim();
+        if (trimmedInput.startsWith("todo")) {
+            String todo = trimmedInput.substring(4).trim();
             if (todo.isEmpty()) {
                 ui.showError("Toodledoo! What is your todo?");
                 return false;
@@ -87,21 +109,22 @@ public class InputParser {
             return false;
         }
 
-        if (input.startsWith("deadline")) {
-            int byIndex = input.indexOf(" /by ");
+        if (trimmedInput.startsWith("deadline")) {
+            int byIndex = trimmedInput.indexOf(" /by ");
             if (byIndex == -1) {
                 ui.showError("No deadline given :0");
                 return false;
             }
-            String desc = input.substring(8, byIndex).trim();
+
+            String desc = trimmedInput.substring(8, byIndex).trim();
             if (desc.isEmpty()) {
                 ui.showError("Tick tock on the clock! What is it you must do?");
                 return false;
             }
-            String byRaw = input.substring(byIndex + 5).trim();
 
+            String byRaw = trimmedInput.substring(byIndex + 5).trim();
             try {
-                LocalDateTime by = LocalDateTime.parse(byRaw, DT_FMT);
+                LocalDateTime by = LocalDateTime.parse(byRaw, DATE_TIME_FORMATTER);
                 tasks.addTask(new Deadline(desc, by));
                 ui.showAdded("deadline", desc, tasks.getSize());
                 Storage.save(tasks);
@@ -111,9 +134,9 @@ public class InputParser {
             return false;
         }
 
-        if (input.startsWith("event")) {
-            int fromIndex = input.indexOf(" /from ");
-            int toIndex = input.indexOf(" /to ");
+        if (trimmedInput.startsWith("event")) {
+            int fromIndex = trimmedInput.indexOf(" /from ");
+            int toIndex = trimmedInput.indexOf(" /to ");
             if (fromIndex == -1) {
                 ui.showError("What is the start time!!!");
                 return false;
@@ -123,18 +146,18 @@ public class InputParser {
                 return false;
             }
 
-            String desc = input.substring(5, fromIndex).trim();
+            String desc = trimmedInput.substring(5, fromIndex).trim();
             if (desc.isEmpty()) {
                 ui.showError("Hey!! What is it you must do?");
                 return false;
             }
 
-            String fromRaw = input.substring(fromIndex + 7, toIndex).trim();
-            String toRaw = input.substring(toIndex + 5).trim();
+            String fromRaw = trimmedInput.substring(fromIndex + 7, toIndex).trim();
+            String toRaw = trimmedInput.substring(toIndex + 5).trim();
 
             try {
-                LocalDateTime from = LocalDateTime.parse(fromRaw, DT_FMT);
-                LocalDateTime to = LocalDateTime.parse(toRaw, DT_FMT);
+                LocalDateTime from = LocalDateTime.parse(fromRaw, DATE_TIME_FORMATTER);
+                LocalDateTime to = LocalDateTime.parse(toRaw, DATE_TIME_FORMATTER);
                 tasks.addTask(new Event(desc, from, to));
                 ui.showAdded("event", desc, tasks.getSize());
                 Storage.save(tasks);
@@ -144,11 +167,11 @@ public class InputParser {
             return false;
         }
 
-        if (input.startsWith("find")) {
-            String keyword = input.substring(5).trim();
+        if (trimmedInput.startsWith("find")) {
+            String keyword = trimmedInput.substring(5).trim();
             TaskList result = tasks.findTask(keyword);
 
-            if (result.getSize()==0) {
+            if (result.getSize() == 0) {
                 ui.showError("Oops! No matching task found...");
                 return false;
             }
@@ -161,14 +184,34 @@ public class InputParser {
         return false;
     }
 
+    /**
+     * Checks if a 1-based index is invalid for the current task list size.
+     *
+     * @param idx       1-based index provided by the user
+     * @param taskCount number of tasks currently in the list
+     * @return true if invalid, false otherwise
+     */
     private boolean isInvalidIndex(int idx, int taskCount) {
-        return idx < 0 || idx <= taskCount;
+        return idx <= 0 || idx > taskCount;
     }
 
+    /**
+     * Parses a single digit at a specific character position as a 1-based index.
+     *
+     * @param input   full user input
+     * @param charPos character position of the digit
+     * @return parsed digit as an int, or -1 if invalid
+     */
     private int parseSingleDigitIndex(String input, int charPos) {
-        if (input.length() <= charPos) return -1;
+        if (input.length() <= charPos) {
+            return -1;
+        }
+
         char c = input.charAt(charPos);
-        if (!Character.isDigit(c)) return -1;
+        if (!Character.isDigit(c)) {
+            return -1;
+        }
+
         return c - '0';
     }
 }

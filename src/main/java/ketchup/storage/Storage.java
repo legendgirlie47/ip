@@ -1,14 +1,17 @@
 package ketchup.storage;
 
-import ketchup.parser.TaskParser;
-import ketchup.tasks.Task;
-import ketchup.tasks.TaskList;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import ketchup.parser.TaskParser;
+import ketchup.tasks.Task;
+import ketchup.tasks.TaskList;
+
+/**
+ * Handles the storage of tasks by saving to and loading from a local data file.
+ */
 public class Storage {
 
     /**
