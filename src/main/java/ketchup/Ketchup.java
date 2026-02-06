@@ -37,18 +37,12 @@ public class Ketchup {
      * Continuously reads user input and processes commands
      * until the user chooses to exit.
      */
-    public void run() {
-        ui.showHello();
-
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            String input = sc.nextLine();
-            boolean shouldExit = parser.handle(input, tasks);
-            if (shouldExit) {
-                ui.showGoodbye();
-                break;
-            }
+    public boolean run(String input) {
+        boolean shouldExit = parser.handle(input, tasks);
+        if (shouldExit) {
+            ui.showGoodbye();
         }
+        return shouldExit;
     }
 
     /**
@@ -57,6 +51,6 @@ public class Ketchup {
      * @param args Command-line arguments (not used)
      */
     public static void main(String[] args) {
-        new Ketchup().run();
+        System.out.println("Hello!");
     }
 }

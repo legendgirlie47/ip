@@ -3,87 +3,99 @@ package ketchup.ui;
 import ketchup.tasks.TaskList;
 
 /**
- * Handles all user-facing output for the Ketchup application.
- * This class is responsible for displaying messages, errors,
- * and task-related feedback to the user.
+ * Handles all user-facing messages for the Ketchup application.
+ * <p>
+ * This class is responsible for generating text responses such as greetings,
+ * confirmations, error messages, and task-related feedback. It does not
+ * handle input parsing or application logic.
  */
 public class Ui {
 
     /**
-     * Displays the greeting message when the program starts.
-     */
-    public void showHello() {
-        System.out.println("Hello! I'm ketchup.\nWhat can I do for you?\n");
-    }
-
-    /**
-     * Displays the goodbye message when the program exits.
-     */
-    public void showGoodbye() {
-        System.out.println("Bye. Hope to see you again soon!");
-    }
-
-    /**
-     * Displays an error message to the user.
+     * Returns the greeting message displayed when the application starts.
      *
-     * @param msg The error message to be shown
+     * @return A greeting message for the user
      */
-    public void showError(String msg) {
-        System.out.println(msg);
+    public String showHello() {
+        return "Hello! I'm ketchup.\nWhat can I do for you?\n";
     }
 
     /**
-     * Displays a message indicating that a task has been added.
+     * Returns the farewell message displayed when the application exits.
      *
-     * @param type The type of task added
+     * @return A goodbye message for the user
+     */
+    public String showGoodbye() {
+        return "Bye. Hope to see you again soon!";
+    }
+
+    /**
+     * Returns an error message to be displayed to the user.
+     *
+     * @param msg The error message content
+     * @return The error message
+     */
+    public String showError(String msg) {
+        return msg;
+    }
+
+    /**
+     * Returns a confirmation message indicating that a task has been added.
+     *
+     * @param type The type of task added (e.g. todo, deadline, event)
      * @param desc The description of the task
      * @param size The updated number of tasks in the list
+     * @return A message confirming the task addition
      */
-    public void showAdded(String type, String desc, int size) {
-        System.out.println("Sure! I have added " + type + ": " + desc);
-        System.out.println("You now have " + size + " tasks in your list!");
+    public String showAdded(String type, String desc, int size) {
+        return "Sure! I have added " + type + ": " + desc
+                + "\nYou now have " + size + " tasks in your list!";
     }
 
     /**
-     * Displays a message indicating that a task has been deleted.
+     * Returns a confirmation message indicating that a task has been deleted.
      *
      * @param desc The description of the deleted task
      * @param size The remaining number of tasks in the list
+     * @return A message confirming the task deletion
      */
-    public void showDeleted(String desc, int size) {
-        System.out.println("Okay! I deleted task: " + desc
-                + "\nYou have " + size + " tasks left!");
+    public String showDeleted(String desc, int size) {
+        return "Okay! I deleted task: " + desc
+                + "\nYou have " + size + " tasks left!";
     }
 
     /**
-     * Displays a message indicating that a task has been marked as done.
+     * Returns a message indicating that a task has been marked as done.
      *
      * @param desc The description of the marked task
+     * @return A confirmation message for marking a task as done
      */
-    public void showMarked(String desc) {
-        System.out.println("Marked task: '" + desc + "' as done! :D");
+    public String showMarked(String desc) {
+        return "Marked task: '" + desc + "' as done! :D";
     }
 
     /**
-     * Displays a message indicating that a task has been unmarked.
+     * Returns a message indicating that a task has been unmarked.
      *
      * @param desc The description of the unmarked task
+     * @return A confirmation message for unmarking a task
      */
-    public void showUnmarked(String desc) {
-        System.out.println("Unmarked task: '" + desc + "' as done :(");
+    public String showUnmarked(String desc) {
+        return "Unmarked task: '" + desc + "' as done :(";
     }
 
     /**
-     * Displays the list of tasks to the user.
-     * If the task list is empty, an appropriate message is shown instead.
+     * Returns a string representation of the task list.
+     * If the task list is empty, an appropriate message is returned instead.
      *
      * @param tasks The task list to be displayed
+     * @return A formatted list of tasks or a message indicating the list is empty
      */
-    public void showList(TaskList tasks) {
+    public String showList(TaskList tasks) {
         if (tasks.getSize() == 0) {
-            System.out.println("No tasks in your list.");
+            return "No tasks in your list.";
         } else {
-            System.out.println(tasks.toString());
+            return tasks.toString();
         }
     }
 }

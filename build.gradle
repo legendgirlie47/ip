@@ -48,7 +48,7 @@ test {
 }
 
 application {
-    mainClass.set("ketchup.Ketchup")
+    mainClass.set("ketchup.Launcher")
 }
 
 shadowJar {
