@@ -8,9 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import ketchup.ui.Ui;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 /**
  * Controller for the main GUI.
@@ -25,6 +24,8 @@ public class MainWindow extends AnchorPane {
     @FXML
     private Button sendButton;
 
+    private Ui ui = new Ui();
+
     private Ketchup ketchup;
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/monkey1.jpeg"));
@@ -32,21 +33,11 @@ public class MainWindow extends AnchorPane {
 
     @FXML
     public void initialize() {
+        String welcomeMsg = ui.showHello();
+        dialogContainer.getChildren().addAll(
+                DialogBox.getDukeDialog(welcomeMsg, ketchupImage)
+        );
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
-
-        System.setOut(new PrintStream(new OutputStream() {
-            @Override
-            public void write(int b) {
-                Platform.runLater(() -> {
-                    dialogContainer.getChildren().add(
-                            DialogBox.getDukeDialog(
-                                    String.valueOf((char) b),
-                                    ketchupImage
-                            )
-                    );
-                });
-            }
-        }));
     }
 
     /** Injects the Ketchup instance */
@@ -61,15 +52,18 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        Boolean shouldExit = ketchup.run(input);
+        KetchupResult result = ketchup.getResult(input);
+        String response = result.getResponse();
+        boolean shouldExit = result.isShouldExit();
+
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getDukeDialog(response, ketchupImage)
+        );
 
         if (shouldExit) {
             Platform.exit();
         }
-
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage)
-        );
 
         userInput.clear();
     }

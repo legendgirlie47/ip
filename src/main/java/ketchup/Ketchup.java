@@ -37,12 +37,8 @@ public class Ketchup {
      * Continuously reads user input and processes commands
      * until the user chooses to exit.
      */
-    public boolean run(String input) {
-        boolean shouldExit = parser.handle(input, tasks);
-        if (shouldExit) {
-            ui.showGoodbye();
-        }
-        return shouldExit;
+    public KetchupResult getResult(String input) {
+        return parser.handle(input, tasks);
     }
 
     /**
