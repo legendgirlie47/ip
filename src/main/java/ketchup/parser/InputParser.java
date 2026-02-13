@@ -42,6 +42,8 @@ public class InputParser {
      */
     public KetchupResult handle(String input, TaskList tasks) {
 
+        assert tasks != null : "TaskList must not be null";
+
         if (input == null) {
             return new KetchupResult(ui.showError("Oh nooo... idk what you are saying..."), false);
         }
