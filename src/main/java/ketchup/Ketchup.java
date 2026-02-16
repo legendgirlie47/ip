@@ -1,7 +1,5 @@
 package ketchup;
 
-import java.util.Scanner;
-
 import ketchup.parser.InputParser;
 import ketchup.storage.Storage;
 import ketchup.tasks.TaskList;
@@ -9,12 +7,10 @@ import ketchup.ui.Ui;
 
 /**
  * The main entry point of the Ketchup application.
- * This class initializes core components and runs the main input loop.
+ * This class initializes core components and delegates
+ * user input processing to the parser.
  */
 public class Ketchup {
-
-    /** UI component responsible for user interaction. */
-    private final Ui ui;
 
     /** Parser that interprets user input commands. */
     private final InputParser parser;
@@ -27,18 +23,34 @@ public class Ketchup {
      * input parser, and loading stored tasks.
      */
     public Ketchup() {
-        this.ui = new Ui();
+        Ui ui = new Ui();
         this.parser = new InputParser(ui);
         this.tasks = Storage.load();
+
+        // Internal invariants
+        assert ui != null : "UI must be initialized";
+        assert this.parser != null : "Parser must be initialized";
+        assert this.tasks != null : "TaskList must be loaded";
     }
 
     /**
-     * Runs the main program loop.
-     * Continuously reads user input and processes commands
-     * until the user chooses to exit.
+     * Processes a single user input string and returns
+     * the result produced by the input parser.
+     *
+     * @param input the raw user input
+     * @return the result of processing the input
      */
     public KetchupResult getResult(String input) {
-        return parser.handle(input, tasks);
+
+        // tasks should always exist
+        assert this.tasks != null : "TaskList must not be null";
+
+        KetchupResult result = parser.handle(input, tasks);
+
+        // parser must always return a result
+        assert result != null : "Parser must return a non-null KetchupResult";
+
+        return result;
     }
 
     /**
