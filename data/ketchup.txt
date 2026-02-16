@@ -1,3 +1,5 @@
 D | 1 | write essay | 2026-09-09 2359
 T | 0 | buy bread
 T | 0 | go home
+T | 0 | go gym
+D | 0 | make bread | 2026-02-20 2200
