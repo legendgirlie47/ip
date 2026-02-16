@@ -10,27 +10,48 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import ketchup.ui.Ui;
 
-
 /**
- * Controller for the main GUI.
+ * Controller for the main JavaFX GUI.
+ * Handles user interactions, updates the dialog container,
+ * and delegates command processing to the {@link Ketchup} instance.
  */
 public class MainWindow extends AnchorPane {
+
+    /** ScrollPane that contains the dialog container. */
     @FXML
     private ScrollPane scrollPane;
+
+    /** Container that holds all dialog boxes. */
     @FXML
     private VBox dialogContainer;
+
+    /** Text field where the user enters input. */
     @FXML
     private TextField userInput;
+
+    /** Button used to send user input. */
     @FXML
     private Button sendButton;
 
+    /** UI helper used to generate welcome message. */
     private Ui ui = new Ui();
 
+    /** Core application logic instance. */
     private Ketchup ketchup;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/monkey1.jpeg"));
-    private Image ketchupImage = new Image(this.getClass().getResourceAsStream("/images/monkey2.jpeg"));
+    /** Image representing the user. */
+    private Image userImage =
+            new Image(this.getClass().getResourceAsStream("/images/monkey1.jpeg"));
 
+    /** Image representing Ketchup. */
+    private Image ketchupImage =
+            new Image(this.getClass().getResourceAsStream("/images/monkey2.jpeg"));
+
+    /**
+     * Initializes the GUI after FXML loading.
+     * Displays the welcome message and binds the scroll pane
+     * to automatically scroll to the bottom when new messages are added.
+     */
     @FXML
     public void initialize() {
         String welcomeMsg = ui.showHello();
@@ -40,14 +61,22 @@ public class MainWindow extends AnchorPane {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Ketchup instance */
+    /**
+     * Injects the {@link Ketchup} instance into this controller.
+     *
+     * @param k the core application logic instance
+     */
     public void setKetchup(Ketchup k) {
-        ketchup = k;
+        this.ketchup = k;
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Ketchup's reply and then appends them to
-     * the dialog container. Clears the user input after processing.
+     * Handles user input from the GUI.
+     * <p>
+     * Retrieves the user's input, delegates processing to the
+     * {@link Ketchup} instance, displays both the user's message
+     * and the application's response, and clears the input field.
+     * If the command indicates exit, the JavaFX platform is terminated.
      */
     @FXML
     private void handleUserInput() {

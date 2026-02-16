@@ -30,6 +30,7 @@ public class InputParser {
      * @param ui UI used to generate user-facing messages
      */
     public InputParser(Ui ui) {
+        assert ui != null : "Ui must not be null";
         this.ui = ui;
     }
 
@@ -42,6 +43,10 @@ public class InputParser {
      */
     public KetchupResult handle(String input, TaskList tasks) {
 
+        // Internal invariant
+        assert tasks != null : "TaskList must not be null";
+        assert ui != null : "Ui must not be null";
+
         if (input == null) {
             return new KetchupResult(ui.showError("Oh nooo... idk what you are saying..."), false);
         }
@@ -53,77 +58,129 @@ public class InputParser {
         }
 
         if (trimmedInput.equalsIgnoreCase("bye")) {
-            return new KetchupResult(ui.showGoodbye(), true);
+            KetchupResult result = new KetchupResult(ui.showGoodbye(), true);
+            assert result != null : "Result must not be null";
+            return result;
         }
 
         if (trimmedInput.equalsIgnoreCase("list")) {
-            return new KetchupResult(ui.showList(tasks), false);
+            KetchupResult result = new KetchupResult(ui.showList(tasks), false);
+            assert result != null : "Result must not be null";
+            return result;
         }
 
         int taskCount = tasks.getSize();
+        assert taskCount >= 0 : "TaskList size must never be negative";
 
         if (trimmedInput.startsWith("mark")) {
             int idx = parseSingleDigitIndex(trimmedInput, 5);
+
             if (isInvalidIndex(idx, taskCount)) {
                 return new KetchupResult(ui.showError("Task not found!!!"), false);
             }
+
             Task task = tasks.getTask(idx - 1);
+            assert task != null : "Retrieved task must not be null";
+
             task.markDone();
             Storage.save(tasks);
-            return new KetchupResult(ui.showMarked(task.getDesc()), false);
+
+            KetchupResult result = new KetchupResult(ui.showMarked(task.getDesc()), false);
+            assert result != null : "Result must not be null";
+            return result;
         }
 
         if (trimmedInput.startsWith("unmark")) {
             int idx = parseSingleDigitIndex(trimmedInput, 7);
+
             if (isInvalidIndex(idx, taskCount)) {
                 return new KetchupResult(ui.showError("Task not found!!!"), false);
             }
+
             Task task = tasks.getTask(idx - 1);
+            assert task != null : "Retrieved task must not be null";
+
             task.markUndone();
             Storage.save(tasks);
-            return new KetchupResult(ui.showUnmarked(task.getDesc()), false);
+
+            KetchupResult result = new KetchupResult(ui.showUnmarked(task.getDesc()), false);
+            assert result != null : "Result must not be null";
+            return result;
         }
 
         if (trimmedInput.startsWith("delete")) {
             int idx = parseSingleDigitIndex(trimmedInput, 7);
+
             if (isInvalidIndex(idx, taskCount)) {
                 return new KetchupResult(ui.showError("Task not found!!!"), false);
             }
+
             Task task = tasks.getTask(idx - 1);
+            assert task != null : "Retrieved task must not be null";
+
             tasks.deleteTask(idx - 1);
             Storage.save(tasks);
-            return new KetchupResult(ui.showDeleted(task.getDesc(), tasks.getSize()), false);
+
+            KetchupResult result =
+                    new KetchupResult(ui.showDeleted(task.getDesc(), tasks.getSize()), false);
+            assert result != null : "Result must not be null";
+            return result;
         }
 
         if (trimmedInput.startsWith("todo")) {
             String todo = trimmedInput.substring(4).trim();
+
             if (todo.isEmpty()) {
                 return new KetchupResult(ui.showError("Toodledoo! What is your todo?"), false);
             }
-            tasks.addTask(new ToDo(todo));
+
+            Task newTask = new ToDo(todo);
+            assert newTask != null : "New ToDo must not be null";
+
+            tasks.addTask(newTask);
             Storage.save(tasks);
-            return new KetchupResult(ui.showAdded("todo", todo, tasks.getSize()), false);
+
+            KetchupResult result =
+                    new KetchupResult(ui.showAdded("todo", todo, tasks.getSize()), false);
+            assert result != null : "Result must not be null";
+            return result;
         }
 
         if (trimmedInput.startsWith("deadline")) {
             int byIndex = trimmedInput.indexOf(" /by ");
+
             if (byIndex == -1) {
                 return new KetchupResult(ui.showError("No deadline given :0"), false);
             }
 
             String desc = trimmedInput.substring(8, byIndex).trim();
+
             if (desc.isEmpty()) {
                 return new KetchupResult(ui.showError("Tick tock on the clock! What is it you must do?"), false);
             }
 
             String byRaw = trimmedInput.substring(byIndex + 5).trim();
+
             try {
-                LocalDateTime by = LocalDateTime.parse(byRaw, DATE_TIME_FORMATTER);
-                tasks.addTask(new Deadline(desc, by));
+                LocalDateTime by =
+                        LocalDateTime.parse(byRaw, DATE_TIME_FORMATTER);
+
+                assert by != null : "Parsed deadline time must not be null";
+
+                Task newTask = new Deadline(desc, by);
+                assert newTask != null : "New Deadline must not be null";
+
+                tasks.addTask(newTask);
                 Storage.save(tasks);
-                return new KetchupResult(ui.showAdded("deadline", desc, tasks.getSize()), false);
+
+                KetchupResult result =
+                        new KetchupResult(ui.showAdded("deadline", desc, tasks.getSize()), false);
+                assert result != null : "Result must not be null";
+                return result;
+
             } catch (DateTimeParseException e) {
-                return new KetchupResult(ui.showError("Please enter date in 'yyyy-MM-dd HHmm' format."), false);
+                return new KetchupResult(
+                        ui.showError("Please enter date in 'yyyy-MM-dd HHmm' format."), false);
             }
         }
 
@@ -134,11 +191,13 @@ public class InputParser {
             if (fromIndex == -1) {
                 return new KetchupResult(ui.showError("What is the start time!!!"), false);
             }
+
             if (toIndex == -1) {
                 return new KetchupResult(ui.showError("What is the end time!!!"), false);
             }
 
             String desc = trimmedInput.substring(5, fromIndex).trim();
+
             if (desc.isEmpty()) {
                 return new KetchupResult(ui.showError("Hey!! What is it you must do?"), false);
             }
@@ -147,28 +206,52 @@ public class InputParser {
             String toRaw = trimmedInput.substring(toIndex + 5).trim();
 
             try {
-                LocalDateTime from = LocalDateTime.parse(fromRaw, DATE_TIME_FORMATTER);
-                LocalDateTime to = LocalDateTime.parse(toRaw, DATE_TIME_FORMATTER);
-                tasks.addTask(new Event(desc, from, to));
+                LocalDateTime from =
+                        LocalDateTime.parse(fromRaw, DATE_TIME_FORMATTER);
+                LocalDateTime to =
+                        LocalDateTime.parse(toRaw, DATE_TIME_FORMATTER);
+
+                assert from != null : "Parsed event start must not be null";
+                assert to != null : "Parsed event end must not be null";
+                assert !to.isBefore(from)
+                        : "Event end time cannot be before start time";
+
+                Task newTask = new Event(desc, from, to);
+                assert newTask != null : "New Event must not be null";
+
+                tasks.addTask(newTask);
                 Storage.save(tasks);
-                return new KetchupResult(ui.showAdded("event", desc, tasks.getSize()), false);
+
+                KetchupResult result =
+                        new KetchupResult(ui.showAdded("event", desc, tasks.getSize()), false);
+                assert result != null : "Result must not be null";
+                return result;
+
             } catch (DateTimeParseException e) {
-                return new KetchupResult(ui.showError("Please enter date in 'yyyy-MM-dd HHmm' format."), false);
+                return new KetchupResult(
+                        ui.showError("Please enter date in 'yyyy-MM-dd HHmm' format."), false);
             }
         }
 
         if (trimmedInput.startsWith("find")) {
             String keyword = trimmedInput.substring(5).trim();
+
             TaskList result = tasks.findTask(keyword);
+            assert result != null : "findTask must not return null";
 
             if (result.getSize() == 0) {
                 return new KetchupResult(ui.showError("Oops! No matching task found..."), false);
             }
 
-            return new KetchupResult(result.toString(), false);
+            KetchupResult finalResult = new KetchupResult(result.toString(), false);
+            assert finalResult != null : "Result must not be null";
+            return finalResult;
         }
 
-        return new KetchupResult(ui.showError("Oh nooo... idk what you are saying..."), false);
+        KetchupResult fallback =
+                new KetchupResult(ui.showError("Oh nooo... idk what you are saying..."), false);
+        assert fallback != null : "Result must not be null";
+        return fallback;
     }
 
     private boolean isInvalidIndex(int idx, int taskCount) {

@@ -23,6 +23,8 @@ public class TaskParser {
      *                   invalid task data
      */
     public Task parse(String line) throws Exception {
+
+        // External validation (file corruption checks)
         if (line == null) {
             throw new Exception("Null line");
         }
@@ -32,13 +34,15 @@ public class TaskParser {
             throw new Exception("Empty line");
         }
 
-        // Split by " | " with optional surrounding spaces
         String[] parts = trimmed.split("\\s*\\|\\s*");
 
-        // Minimum format: TYPE | DONE | DESCRIPTION
         if (parts.length < 3) {
             throw new Exception("Corrupted line: not enough parts");
         }
+
+        // Internal guarantee after validation
+        assert parts.length >= 3
+                : "Parser assumes at least 3 parts after validation";
 
         String type = parts[0].trim();
         String donePart = parts[1].trim();
@@ -47,11 +51,13 @@ public class TaskParser {
         if (!(donePart.equals("0") || donePart.equals("1"))) {
             throw new Exception("Corrupted done flag");
         }
+
         boolean isDone = donePart.equals("1");
 
-        Task task;
+        Task task = null;
 
         switch (type) {
+
         case "T":
             task = new ToDo(desc);
             break;
@@ -60,11 +66,18 @@ public class TaskParser {
             if (parts.length < 4) {
                 throw new Exception("Corrupted deadline: missing /by");
             }
+
             String by = parts[3].trim();
             try {
                 LocalDateTime byTime =
                         LocalDateTime.parse(by, Task.getDateFormat());
+
+                // Internal assumption: parse success guarantees non-null
+                assert byTime != null
+                        : "Parsed deadline time must not be null";
+
                 task = new Deadline(desc, byTime);
+
             } catch (DateTimeParseException e) {
                 throw new Exception("Corrupted line: invalid DateTime format.");
             }
@@ -74,14 +87,27 @@ public class TaskParser {
             if (parts.length < 5) {
                 throw new Exception("Corrupted event: missing /from or /to");
             }
+
             String from = parts[3].trim();
             String to = parts[4].trim();
+
             try {
                 LocalDateTime fromTime =
                         LocalDateTime.parse(from, Task.getDateFormat());
                 LocalDateTime toTime =
                         LocalDateTime.parse(to, Task.getDateFormat());
+
+                assert fromTime != null
+                        : "Parsed event start time must not be null";
+                assert toTime != null
+                        : "Parsed event end time must not be null";
+
+                // Logical invariant: end cannot be before start
+                assert !toTime.isBefore(fromTime)
+                        : "Event end time cannot be before start time";
+
                 task = new Event(desc, fromTime, toTime);
+
             } catch (DateTimeParseException e) {
                 throw new Exception("Corrupted line: invalid DateTime format.");
             }
@@ -91,9 +117,14 @@ public class TaskParser {
             throw new Exception("Unknown task type: " + type);
         }
 
+        // Post-condition guarantee
+        assert task != null
+                : "Task must be initialized before returning";
+
         if (isDone) {
             task.markDone();
         }
+
         return task;
     }
 }
