@@ -40,8 +40,6 @@ public class TaskParser {
      */
     public Task parse(String line) throws Exception {
 
-        assert line != null : "Input line must not be null";
-
         validateLine(line);
 
         String[] parts = splitLine(line);
@@ -137,17 +135,17 @@ public class TaskParser {
             throws Exception {
 
         switch (type) {
-            case "T":
-                return createTodo(desc);
+        case "T":
+            return createTodo(desc);
 
-            case "D":
-                return createDeadline(desc, parts);
+        case "D":
+            return createDeadline(desc, parts);
 
-            case "E":
-                return createEvent(desc, parts);
+        case "E":
+            return createEvent(desc, parts);
 
-            default:
-                throw new Exception("Unknown task type: " + type);
+        default:
+            throw new Exception("Unknown task type: " + type);
         }
     }
 

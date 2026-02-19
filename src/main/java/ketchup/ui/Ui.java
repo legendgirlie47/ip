@@ -20,9 +20,14 @@ public class Ui {
         return "Hola!! I'm Ketchup! \nWhat can I do for you?\n";
     }
 
+    /**
+     * Returns a short guidance message prompting the user
+     * to type the help command for available instructions.
+     *
+     * @return a user-facing message encouraging the use of the help command
+     */
     public String showHelpMessage() {
         return "Not sure what to do? Just type 'help'!";
-
     }
 
     /**

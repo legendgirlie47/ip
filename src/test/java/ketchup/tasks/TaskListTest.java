@@ -1,55 +1,109 @@
 package ketchup.tasks;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link TaskList}.
- * Verifies basic task list operations such as add, get, and delete.
+ * Verifies task addition, deletion, retrieval,
+ * searching, and string formatting behavior.
  */
 public class TaskListTest {
 
+    private TaskList taskList;
+
     /**
-     * Tests that tasks added to the list are stored in order
-     * and can be retrieved correctly by index.
+     * Initializes a fresh TaskList before each test.
      */
-    @Test
-    public void addAndGetTask_tasksStoredInOrder() {
-        TaskList list = new TaskList();
-
-        list.addTask(new ToDo("read book"));
-        list.addTask(new ToDo("write report"));
-
-        assertEquals(2, list.getSize());
-        assertEquals("read book", list.getTask(0).getDesc());
-        assertEquals("write report", list.getTask(1).getDesc());
+    @BeforeEach
+    public void setUp() {
+        taskList = new TaskList();
     }
 
-    /**
-     * Tests that deleting a task removes it and shifts subsequent tasks left.
-     */
+    /* ================= BASIC OPERATIONS ================= */
+
     @Test
-    public void deleteTask_removedAndShiftsLeft() {
-        TaskList list = new TaskList();
-        list.addTask(new ToDo("A"));
-        list.addTask(new ToDo("B"));
-        list.addTask(new ToDo("C"));
-
-        list.deleteTask(1); // delete "B"
-
-        assertEquals(2, list.getSize());
-        assertEquals("A", list.getTask(0).getDesc());
-        assertEquals("C", list.getTask(1).getDesc()); // shifted left
+    public void constructor_initialSizeZero() {
+        assertEquals(0, taskList.getSize());
     }
 
-    /**
-     * Tests that deleting a task at an invalid index throws an exception.
-     */
     @Test
-    public void deleteTask_indexOutOfBounds_exceptionThrown() {
-        TaskList list = new TaskList();
-        assertThrows(IndexOutOfBoundsException.class, () -> list.deleteTask(0));
+    public void addTask_increasesSize() {
+        taskList.addTask(new ToDo("read book"));
+        assertEquals(1, taskList.getSize());
+    }
+
+    @Test
+    public void getTask_returnsCorrectTask() {
+        Task task = new ToDo("study");
+        taskList.addTask(task);
+
+        assertEquals(task, taskList.getTask(0));
+    }
+
+    @Test
+    public void deleteTask_removesTask() {
+        taskList.addTask(new ToDo("task1"));
+        taskList.addTask(new ToDo("task2"));
+
+        taskList.deleteTask(0);
+
+        assertEquals(1, taskList.getSize());
+        assertEquals("task2", taskList.getTask(0).getDesc());
+    }
+
+    /* ================= FIND ================= */
+
+    @Test
+    public void findTask_existingKeyword_returnsMatchingTasks() {
+        taskList.addTask(new ToDo("read book"));
+        taskList.addTask(new ToDo("write report"));
+        taskList.addTask(new ToDo("buy milk"));
+
+        TaskList results = taskList.findTask("read");
+
+        assertEquals(1, results.getSize());
+        assertTrue(results.getTask(0).getDesc().contains("read"));
+    }
+
+    @Test
+    public void findTask_caseInsensitive_matchesCorrectly() {
+        taskList.addTask(new ToDo("Read Book"));
+
+        TaskList results = taskList.findTask("read");
+
+        assertEquals(1, results.getSize());
+    }
+
+    @Test
+    public void findTask_noMatch_returnsEmptyList() {
+        taskList.addTask(new ToDo("read book"));
+
+        TaskList results = taskList.findTask("math");
+
+        assertEquals(0, results.getSize());
+    }
+
+    /* ================= toString ================= */
+
+    @Test
+    public void toString_emptyList_returnsMessage() {
+        assertEquals("No tasks in your list.", taskList.toString());
+    }
+
+    @Test
+    public void toString_nonEmptyList_formatsCorrectly() {
+        taskList.addTask(new ToDo("read"));
+        taskList.addTask(new ToDo("write"));
+
+        String output = taskList.toString();
+
+        assertTrue(output.contains("1."));
+        assertTrue(output.contains("2."));
+        assertTrue(output.contains("read"));
+        assertTrue(output.contains("write"));
     }
 }
