@@ -60,6 +60,10 @@ public class InputParser {
             return new KetchupResult(ui.showGoodbye(), true);
         }
 
+        if (trimmed.equalsIgnoreCase("help")) {
+            return new KetchupResult(ui.showAppGuidance(), false);
+        }
+
         if (trimmed.equalsIgnoreCase("list")) {
             return new KetchupResult(ui.showList(tasks), false);
         }

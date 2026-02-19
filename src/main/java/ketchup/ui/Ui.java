@@ -17,7 +17,12 @@ public class Ui {
      * @return A greeting message for the user
      */
     public String showHello() {
-        return "Hello! I'm ketchup.\nWhat can I do for you?\n";
+        return "Hola!! I'm Ketchup! \nWhat can I do for you?\n";
+    }
+
+    public String showHelpMessage() {
+        return "Not sure what to do? Just type 'help'!";
+
     }
 
     /**
@@ -98,4 +103,32 @@ public class Ui {
             return tasks.toString();
         }
     }
+
+    /**
+     * Returns a formatted help message that lists all available commands
+     * supported by the Ketchup chatbot.
+     *
+     * @return A multi-line String containing usage instructions for
+     *         creating, modifying, deleting tasks, and exiting the chatbot.
+     */
+    public String showAppGuidance() {
+        return "👋 Welcome to Ketchup!\n\n"
+                + "Here are the commands you can use:\n\n"
+                + "📌 Add a To-Do\n"
+                + "todo \"task description\"\n\n"
+                + "⏰ Add a Deadline\n"
+                + "deadline \"task description\" /by yyyy-MM-dd HHmm\n\n"
+                + "📅 Add an Event\n"
+                + "event \"event description\" /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm\n\n"
+                + "✅ Mark a Task as Done\n"
+                + "mark <task number>\n\n"
+                + "↩ Unmark a Task\n"
+                + "unmark <task number>\n\n"
+                + "🗑 Delete a Task\n"
+                + "delete <task number>\n\n"
+                + "👋 Exit the Chatbot\n"
+                + "bye\n\n"
+                + "Let’s ketchup and get things done! 🍅";
+    }
+
 }

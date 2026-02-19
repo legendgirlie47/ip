@@ -1,5 +1,6 @@
 package ketchup;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import ketchup.ui.Ui;
 
 /**
@@ -58,6 +60,13 @@ public class MainWindow extends AnchorPane {
         dialogContainer.getChildren().addAll(
                 DialogBox.getDukeDialog(welcomeMsg, ketchupImage)
         );
+        PauseTransition delay = new PauseTransition(Duration.seconds(0.4));
+
+        String helpMessage = ui.showHelpMessage();
+        delay.setOnFinished(event -> dialogContainer.getChildren().add(
+                DialogBox.getDukeDialog(helpMessage, ketchupImage)
+        ));
+        delay.play();
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
