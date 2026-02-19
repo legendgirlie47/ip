@@ -7,7 +7,6 @@
 
 <fx:root alignment="TOP_RIGHT"
          spacing="10"
-         maxWidth="400.0"
          type="javafx.scene.layout.HBox"
          xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">

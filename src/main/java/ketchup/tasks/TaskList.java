@@ -83,7 +83,7 @@ public class TaskList {
     @Override
     public String toString() {
         if (this.taskList.isEmpty()) {
-            return "No tasks in your list.";
+            return "Oh yeah no tasks in your list!";
         }
 
         StringBuilder sb = new StringBuilder();

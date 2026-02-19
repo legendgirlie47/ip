@@ -18,19 +18,28 @@
             -fx-background-position: center center;">
     <children>
         <TextField fx:id="userInput"
-                   layoutY="558.0"
                    onAction="#handleUserInput"
                    prefHeight="41.0"
-                   prefWidth="324.0"
-                   AnchorPane.bottomAnchor="1.0" />
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.rightAnchor="76.0"
+                   style="
+                       -fx-background-color: #2f2f2f;
+                       -fx-text-fill: white;
+                       -fx-prompt-text-fill: #bbbbbb;
+                       -fx-padding: 0 15 0 15;" />
         <Button fx:id="sendButton"
-                layoutX="324.0"
-                layoutY="558.0"
                 mnemonicParsing="false"
                 onAction="#handleUserInput"
                 prefHeight="41.0"
                 prefWidth="76.0"
-                text="Send" />
+                text="Send"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                style="
+                    -fx-background-color: #1565C0;
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;" />
         <ScrollPane fx:id="scrollPane"
                     AnchorPane.topAnchor="0.0"
                     AnchorPane.leftAnchor="0.0"
@@ -42,7 +51,7 @@
                     style="-fx-background: transparent; -fx-background-color: transparent;">
         <content>
                 <VBox fx:id="dialogContainer"
-                      prefWidth="388.0" />
+                      fillWidth="true" />
             </content>
         </ScrollPane>
     </children>
