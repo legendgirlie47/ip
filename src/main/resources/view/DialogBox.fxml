@@ -6,17 +6,34 @@
 <?import javafx.scene.layout.HBox?>
 
 <fx:root alignment="TOP_RIGHT"
-         maxHeight="1.7976931348623157E308"
-         maxWidth="1.7976931348623157E308"
-         prefWidth="400.0"
+         spacing="10"
+         maxWidth="400.0"
          type="javafx.scene.layout.HBox"
          xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
+
     <children>
-        <Label fx:id="dialog" text="Label" wrapText="true" minHeight="-Infinity"/>
-        <ImageView fx:id="displayPicture" fitHeight="99.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" />
+
+        <Label fx:id="dialog"
+               wrapText="true"
+               maxWidth="250"
+               style="
+                   -fx-background-color: rgba(255,255,255,0.8);
+                   -fx-background-radius: 18;
+                   -fx-padding: 10 15 10 15;
+                   -fx-text-fill: black;
+                   -fx-font-size: 14px;
+                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0.3, 0, 2);
+               "/>
+
+        <ImageView fx:id="displayPicture"
+                   fitHeight="60"
+                   fitWidth="60"/>
+
     </children>
+
     <padding>
-        <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
+        <Insets bottom="10" left="5" right="5" top="10"/>
     </padding>
+
 </fx:root>
