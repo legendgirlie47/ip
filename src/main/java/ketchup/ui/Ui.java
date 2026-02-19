@@ -120,6 +120,8 @@ public class Ui {
                 + "deadline \"task description\" /by yyyy-MM-dd HHmm\n\n"
                 + "📅 Add an Event\n"
                 + "event \"event description\" /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm\n\n"
+                + "📋 View All Tasks\n"
+                + "list\n\n"
                 + "✅ Mark a Task as Done\n"
                 + "mark <task number>\n\n"
                 + "↩ Unmark a Task\n"
@@ -128,6 +130,7 @@ public class Ui {
                 + "delete <task number>\n\n"
                 + "👋 Exit the Chatbot\n"
                 + "bye\n\n"
+                + "Type \"help\" anytime to see this guide again. "
                 + "Let’s ketchup and get things done! 🍅";
     }
 
