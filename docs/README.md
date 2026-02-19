@@ -18,7 +18,7 @@ All interactions are done through text commands in the chatbot interface.
 ---
 ## User Interface
 
-![Ketchup UI](images/ui.png)
+![Ketchup UI](Ui.png)
 ---
 
 ## 🚀 Quick Start
