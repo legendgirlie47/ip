@@ -1,5 +1,9 @@
-T | 0 | read book
+T | 1 | read book
 D | 0 | buy tickets | 2026-09-09 1800
 D | 1 | wash trousers | 2026-10-23 1923
 E | 0 | dj dash | 2026-07-23 1800 | 2026-07-24 1800
 T | 0 | study french
+T | 0 | eat
+T | 0 | sleep
+T | 1 | cycle
+T | 0 | learn german

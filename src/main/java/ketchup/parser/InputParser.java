@@ -107,7 +107,7 @@ public class InputParser {
      * @return the result of marking a task as done
      */
     private KetchupResult handleMark(String input, TaskList tasks) {
-        int idx = parseSingleDigitIndex(input, 5);
+        int idx = parseIndex(input);
 
         if (isInvalidIndex(idx, tasks.getSize())) {
             return error("Task not found!!!");
@@ -130,7 +130,7 @@ public class InputParser {
      * @return the result of marking a task as not done
      */
     private KetchupResult handleUnmark(String input, TaskList tasks) {
-        int idx = parseSingleDigitIndex(input, 7);
+        int idx = parseIndex(input);
 
         if (isInvalidIndex(idx, tasks.getSize())) {
             return error("Task not found!!!");
@@ -153,7 +153,7 @@ public class InputParser {
      * @return the result of deleting a task
      */
     private KetchupResult handleDelete(String input, TaskList tasks) {
-        int idx = parseSingleDigitIndex(input, 7);
+        int idx = parseIndex(input);
 
         if (isInvalidIndex(idx, tasks.getSize())) {
             return error("Task not found!!!");
@@ -333,22 +333,23 @@ public class InputParser {
     }
 
     /**
-     * Parses a single-digit task index from a specific character position.
+     * Parses task index from a input string.
      *
      * @param input the full input string
-     * @param charPos the character position where the index is expected
      * @return the parsed integer index, or -1 if invalid
      */
-    private int parseSingleDigitIndex(String input, int charPos) {
-        if (input.length() <= charPos) {
+    private int parseIndex(String input) {
+        String[] parts = input.split("\\s+");
+
+        if (parts.length < 2) {
             return -1;
         }
 
-        char c = input.charAt(charPos);
-        if (!Character.isDigit(c)) {
+        try {
+            return Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
             return -1;
         }
-
-        return c - '0';
     }
+
 }
