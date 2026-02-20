@@ -268,6 +268,10 @@ public class InputParser {
             LocalDateTime to =
                     LocalDateTime.parse(toRaw, DATE_TIME_FORMATTER);
 
+            if (to.isBefore(from)) {
+               return error("Your event ends before it starts...");
+            }
+
             assert from != null : "Parsed event start must not be null";
             assert to != null : "Parsed event end must not be null";
             assert !to.isBefore(from)
